@@ -1,10 +1,11 @@
-//
+// Initialized by CLORO
 const hexgen = require("hex-generator");
 const InvitationClass = require("./invitation.js");
 
 const NewInvitationClass = new InvitationClass();
 const invites = NewInvitationClass.getInvites();
 
+// Prototyping Test
 console.log(NewInvitationClass.getId());
 console.log(NewInvitationClass.getReferenceCode());
 console.log(NewInvitationClass.getInvites());
