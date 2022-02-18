@@ -4,7 +4,8 @@
   "description": "Programming Contest for Arts & Tech Week 2022",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "test": "node index.js",
+    "run": "node index.js"
   },
   "author": "",
   "license": "MIT",
