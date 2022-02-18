@@ -1,0 +1,11 @@
+{
+  "name": "programming-contest",
+  "version": "1.0.0",
+  "description": "Programming Contest for Arts & Tech Week 2022",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "",
+  "license": "MIT"
+}
