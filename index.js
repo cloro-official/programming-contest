@@ -16,6 +16,14 @@ router.get("/completed", (req, res) => {
     res.sendFile("./html/completed.html", { root: __dirname });
 })
 
+router.get("/register", (req, res) => {
+    res.sendFile("./html/register.html", { root: __dirname });
+})
+
+router.get("/adminpanel", (req, res) => {
+    res.sendFile("./html/adminpanel.html", { root: __dirname });
+})
+
 app.use("/", router);
 app.listen(process.env.port || 3000);
 console.log("Verification code listening on port 3000");
