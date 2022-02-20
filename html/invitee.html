@@ -3,13 +3,32 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
     <title>Verification</title>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+    <script src="../modules/jsbarcode.js"></script>
     <script src="https://cdn.tailwindcss.com/"></script>
     <script>
         tailwind.config.future = {
             removeDeprecatedGapUtilities: true,
             purgeLayersByDefault: true,
         };
+        
+        $(document).ready(() => {
+            const queryStrings = new Proxy(new URLSearchParams(window.location.search), {
+                get: (target, prop) => target.get(prop),
+            });
+
+            $("#barcode").JsBarcode(queryStrings.referral.toUpperCase(), {
+                format: "CODE128",
+                width: 2,
+                height: 40,
+                displayValue: true,
+            });
+        });
     </script>
     <style type="text/tailwindcss">
 
@@ -19,8 +38,10 @@
 <body class="bg-gradient-to-r from-cyan-400 to-blue-500 flex flex-row justify-center items-center">
     <div class="w-full max-w-xs">
         <form class="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
-            <p class="mb text-center font-bold">Referral Code</p>
-            <p class="mb-4 text-center font-semibold"></p>
+            <p class="mb self-center w-full text-center font-bold">Referral Code</p>
+            <div class="flex flex-row justify-center items-center m-2">
+                <svg class="self-start" id="barcode"></svg>
+            </div>
             <div class="mb-4">
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -49,7 +70,7 @@
                 </button>
             </div>
         </form>
-        <p class="text-center text-gray-500 text-xs">
+        <p class="text-center text-white text-xs">
             &copy;2022 Team Kani
         </p>
         </div>

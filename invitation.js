@@ -1,16 +1,7 @@
 const hexgen = require("hex-generator");
-/*
-    Generate 16 bit Hexadecimal (16 = 4 characters)
-    Append to generated 16 bit Hexadecimal to ID to create a 32 bit Hexadecimal value.
+const fs = require("fs-extra");
+const { join } = require("path");
 
-    Goal:
-    Make it so the ID generated must be placed on the reference code on different string indexes.
-    This will make it so the ID is not easily found, and must always not be in the same index (first index).
-
-    We can get the reference code of each invite by removing the ID, where it will always return a 4 character string.
-
-    Then we can verify through RegEx or string.includes().
-*/
 const appendIdtoString = (id = "", string = "", start = 1) => {
     return (string.substring(0, start) + id + string.substring(start)).slice(0, 8)
 }
@@ -40,6 +31,21 @@ class Invitation {
         })
 
         return invites;
+    }
+
+    parseToJson() {
+        return JSON.stringify({
+            id: this.id,
+            startIndex: this.startIndex,
+            referenceCode: this.referenceCode,
+            inviteeReferenceCode: this.inviteeReferenceCode
+        }, null, "\t");
+    }
+
+    createFile() {
+        if (!fs.existsSync(join(__dirname, "database", this.id + ".json"))) {
+            fs.writeFileSync(join(__dirname, "database", this.id + ".json"), this.parseToJson());
+        }
     }
     
     verifyInviteCode(inviteCode = "") {
