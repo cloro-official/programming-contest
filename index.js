@@ -21,9 +21,8 @@ router.get("/invitee", (req, res) => {
 router.get("/completed", (req, res) => {
     res.sendFile("./html/completed.html", { root: __dirname });
 })
-
-router.get("/register", (req, res) => {
-    res.sendFile("./html/register.html", { root: __dirname });
+router.get("/generated", (req, res) => {
+    res.sendFile("./html/generated.html", { root: __dirname });
 })
 
 router.get("/adminpanel", (req, res) => {
@@ -34,8 +33,38 @@ router.get("/", (req, res) => {
     res.sendFile("./html/index.html", { root: __dirname });
 })
 
+router.post("/get-class", (req, res) => {
+    const { id } = req.body;
+    const filePath = join(__dirname, "database/invites", id + ".json");
+    if (fs.existsSync(filePath)) {
+        const data = fs.readFileSync(filePath);
+        const invitation = JSON.parse(data);
+        res.send({success: true, class: invitation});
+    }
+
+    res.send({success: false})
+})
+
+router.post("/create", (req, res) => {
+    const { name, phone, email } = req.body;
+
+    try {
+        const invitation = new InvitationClass(name, phone, email);
+        invitation.createFile();
+        
+        InvitationClasses[invitation.id] = invitation;
+        res.send({success: true, class: invitation.parseToJson()});
+    } catch (error) {
+        res.send({success: false});
+    }
+});
+
 router.get("/none", (req, res) => {
     res.sendFile("./html/none.html", { root: __dirname });
+})
+
+router.get("/usedup", (req, res) => {
+    res.sendFile("./html/usedup.html", { root: __dirname });
 })
 
 router.get("/modules/jsbarcode.js", (req, res) => {
@@ -46,7 +75,7 @@ router.post("/index", (req, res) => {
     const { referral } = req.body
 
     if (referral) {
-        const exists = fs.existsSync(join(__dirname, "database", referral + ".json"));
+        const exists = fs.existsSync(join(__dirname, "database/invites", referral + ".json"));
         res.send({success: exists});
 
         res.end();

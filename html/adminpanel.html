@@ -4,15 +4,74 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verification</title>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com/"></script>
     <script>
         tailwind.config.future = {
             removeDeprecatedGapUtilities: true,
             purgeLayersByDefault: true,
         };
+
+        const ensure = (str) => {
+            if (!str) alert("Please fill in all fields");            
+            return str
+        }
+
+        $(document).ready(() => {
+            $("#create").click(() => {
+                const name = ensure($('#name').val());
+                const email = ensure($('#email').val());
+                const phone = ensure($('#phone').val());
+
+                $.post("http://localhost:3000/create", { name: name, email: email, phone: phone }, (data) => {
+                     if (data.success) {
+                        const json = data.class;
+
+                        window.location.href = "http://localhost:3000/generated?id=" + json.id + "&id_one=" + json.generatedInvites[0] + "&id_two=" + json.generatedInvites[1] + "&ref_one=" + json.inviteeReferenceCode[0] + "&ref_two=" + json.inviteeReferenceCode[1];
+                     } else {
+                        alert("There's an error trying to create your invite.")
+                     } 
+                })
+            })
+        })
     </script>
     <style type="text/tailwindcss">
 
     </style>
 </head>
+<body class="bg-gradient-to-r from-cyan-400 to-blue-500 flex flex-row justify-center items-center">
+    <div class="w-full max-w-xs">
+        <form class="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
+            <p class="mb-4 self-center w-full text-center font-bold">Create Invite Code</p>
+            <div class="mb-4">
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="name" type="text" placeholder="Enter name">
+            </div>
+            <div class="mb-4">
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="email" type="text" placeholder="Enter email">
+            </div>
+            <div class="mb-4">
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="phone" type="text" placeholder="Enter phone number">
+            </div>
+            <div class="flex flex-col items-center justify-between">
+                <button
+                    class="bg-gradient-to-r from-green-400 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button" id="create">
+                    Create
+                </button>
+            </div>
+        </form>
+        <p class="text-center text-white text-xs">
+            &copy;2022 Team Kani
+        </p>
+    </div>
+</body>
 </html>

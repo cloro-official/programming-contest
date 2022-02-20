@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
+    <title>Verification</title>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+    <script src="../modules/jsbarcode.js"></script>
+    <script src="https://cdn.tailwindcss.com/"></script>
+    <script>
+        tailwind.config.future = {
+            removeDeprecatedGapUtilities: true,
+            purgeLayersByDefault: true,
+        };
+        $(document).ready(() => {
+            const queryStrings = new Proxy(new URLSearchParams(window.location.search), {
+                get: (target, prop) => target.get(prop),
+            });
+
+            const id = queryStrings.id;
+            const id_one = queryStrings.id_one;
+            const id_two = queryStrings.id_two;
+            const ref_one = queryStrings.ref_one;
+            const ref_two = queryStrings.ref_two;
+
+            $("#id-barcode").JsBarcode(id, {
+                format: "CODE128",
+                width: 2,
+                height: 50,
+                displayValue: false,
+            });
+
+            $("#id-code").text(id);
+            $("#id-code-one").text(id_one);
+            $("#id-code-two").text(id_two);
+        })
+    </script>
+    <style type="text/tailwindcss">
+
+    </style>
+</head>
+<body class="flex flex-row justify-center items-center">
+    <div class="flex flex-col justify-center items-center">
+        <p class="text-2xl font-bold">Generated an invite code!</p>
+        <p class="text-lg font-semibold text-gray-500 mb-4">Invite barcode:</p>
+        <div class="flex flex-col justify-center items-center m-2">
+            <svg class="self-start" id="id-barcode"></svg>
+            <p class="my-2 text-md font-semibold" id="id-code"></p>
+        </div>
+        <p class="text-lg font-semibold text-gray-500 my-4">Generated Invites:</p>
+
+            <p class="my-2 text-md font-semibold" id="id-code-one"></p>
+            <p class="my-2 text-md font-semibold" id="id-code-two"></p>
+        </div>
+    </div>
+</body>

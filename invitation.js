@@ -7,13 +7,17 @@ const appendIdtoString = (id = "", string = "", start = 1) => {
 }
 
 class Invitation {
-    constructor() {
+    constructor(name, phone, email) {
         var id = hexgen(16).toUpperCase();
         var startIndex = Math.floor((Math.random() * 3) + 1); // index may start from 1 to 2
         var refCode = hexgen(16).toUpperCase();
         
         console.log(startIndex);
         //
+
+        this.invitator = name;
+        this.phone = phone;
+        this.email = email;
         this.id = id;
         this.startIndex = startIndex;
         this.referenceCode = appendIdtoString(id, refCode, startIndex);
@@ -21,6 +25,10 @@ class Invitation {
             hexgen(16).toUpperCase(),
             hexgen(16).toUpperCase(),
         ];
+    }
+
+    static constructFromJson(json) {
+
     }
 
     getInvites() {
@@ -34,18 +42,54 @@ class Invitation {
     }
 
     parseToJson() {
-        return JSON.stringify({
+        return {
             id: this.id,
+            name: this.invitator,
+            phone: this.phone,
             startIndex: this.startIndex,
             referenceCode: this.referenceCode,
-            inviteeReferenceCode: this.inviteeReferenceCode
-        }, null, "\t");
+            inviteeReferenceCode: this.inviteeReferenceCode,
+            generatedInvites: this.getInvites()
+        };
     }
 
     createFile() {
-        if (!fs.existsSync(join(__dirname, "database", this.id + ".json"))) {
-            fs.writeFileSync(join(__dirname, "database", this.id + ".json"), this.parseToJson());
+        if (!fs.existsSync(join(__dirname, "database/invites", this.id + ".json"))) {
+            fs.writeFileSync(join(__dirname, "database/invites", this.id + ".json"), JSON.stringify(this.parseToJson(), null, "\t"));
         }
+    }
+
+    markAsUsed(index) {
+        const invite = this.inviteeReferenceCode[index];
+
+        if (invite) {
+            const usedInvites = fs.readJSONSync(join(__dirname, "database/usedInvites.json"));
+            usedInvites.push({
+                id: this.id,
+                invite: invite
+            });
+
+            fs.writeJSONSync(join(__dirname, "database/usedInvites.json"), usedInvites);
+        }
+    }
+
+    getUnusedInvite() {
+        for (let i = 0; i < this.inviteeReferenceCode.length; i++) {
+            const invite = this.inviteeReferenceCode[i];
+
+            if (!this.checkIfUsed(invite)) {
+                return invite;
+            }
+        }
+
+        return false;
+    }
+
+    checkIfUsed(referralCode) {
+        const ifUsed = fs.readJSONSync(join(__dirname, "database/usedInvites.json"));
+        const ifUsedInvite = ifUsed.find(usedInvite => usedInvite === referralCode);
+
+        return ifUsedInvite ? true : false;
     }
     
     verifyInviteCode(inviteCode = "") {
@@ -56,6 +100,8 @@ class Invitation {
         if (match && match.index == this.startIndex) {
             const refCodes = inviteCode.replace(this.id, "");
             const ifFound = this.inviteeReferenceCode.find(refCode => refCode === refCodes);
+            if (checkIfUsed(inviteCode) == true)
+                return false;
 
             if (ifFound) 
                 return true;
