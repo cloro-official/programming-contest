@@ -14,6 +14,10 @@ const UserClass = require("./user.js");
 const { use } = require('express/lib/application');
 
 const usedInvitePath = join(__dirname, "../../data/usedInvites.json");
+
+fs.ensureDirSync(join(__dirname, "database/invites")); 
+fs.ensureDirSync(join(__dirname, "database/users")); 
+
 fs.ensureFileSync(usedInvitePath);
 fs.writeFileSync(usedInvitePath, JSON.stringify({ "0": [] }, null, "\t"));
 
