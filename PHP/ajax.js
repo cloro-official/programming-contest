@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function(){
-        $('submit').click(function (e){   
+        $('#submit').click(function (e){   
             e.preventDefault();
             $.ajax({
                 type: "post",
