@@ -7,7 +7,7 @@ const appendIdtoString = (id = "", string = "", start = 1) => {
 }
 
 class Invitation {
-    constructor(name, phone, email) {
+    constructor(cid, name, phone, email) {
         var id = hexgen(16).toUpperCase();
         var startIndex = Math.floor((Math.random() * 3) + 1); // index may start from 1 to 2
         var refCode = hexgen(16).toUpperCase();
@@ -15,6 +15,7 @@ class Invitation {
         console.log(startIndex);
         //
 
+        this.creator = cid;
         this.invitator = name;
         this.phone = phone;
         this.email = email;
@@ -25,10 +26,20 @@ class Invitation {
             hexgen(16).toUpperCase(),
             hexgen(16).toUpperCase(),
         ];
+        this.generatedInvites = this.getInvites();
     }
 
     static constructFromJson(json) {
+        const { id, creator, generatedInvites, name, phone, email, invitator, startIndex, referenceCode, inviteeReferenceCode } = json;
+        const invitation = new Invitation(creator, name, phone, email);
+        invitation.id = id;
+        invitation.invitator = invitator;
+        invitation.startIndex = startIndex;
+        invitation.referenceCode = referenceCode;
+        invitation.inviteeReferenceCode = inviteeReferenceCode;
+        invitation.generatedInvites = generatedInvites;
 
+        return invitation;
     }
 
     getInvites() {
@@ -43,6 +54,7 @@ class Invitation {
 
     parseToJson() {
         return {
+            creator: this.creator,
             id: this.id,
             name: this.invitator,
             phone: this.phone,
@@ -59,26 +71,33 @@ class Invitation {
         }
     }
 
-    markAsUsed(index) {
-        const invite = this.inviteeReferenceCode[index];
+    markAsUsed(index, userId) {
+        const invite = this.generatedInvites[index];
 
         if (invite) {
             const usedInvites = fs.readJSONSync(join(__dirname, "database/usedInvites.json"));
-            usedInvites.push({
-                id: this.id,
-                invite: invite
-            });
+            if (!this.checkIfUsed(invite)) {
+                usedInvites["0"].push({
+                    usedFor: this.id,
+                    creator: this.creator,
+                    user: userId,
+                    invite: invite
+                });
+            }
 
-            fs.writeJSONSync(join(__dirname, "database/usedInvites.json"), usedInvites);
+            fs.writeJSONSync(join(__dirname, "database/usedInvites.json"), {"0": usedInvites["0"]});
         }
     }
 
     getUnusedInvite() {
-        for (let i = 0; i < this.inviteeReferenceCode.length; i++) {
-            const invite = this.inviteeReferenceCode[i];
-
-            if (!this.checkIfUsed(invite)) {
-                return invite;
+        for (let i = 0; i < this.generatedInvites.length; i++) {
+            const invite = this.generatedInvites[i];
+            
+            console.log("checkIfUnused");
+            console.log(invite);
+            if (this.checkIfUsed(invite) == false) {
+                console.log("used!")
+                return {invite: invite, index: i};
             }
         }
 
@@ -87,9 +106,20 @@ class Invitation {
 
     checkIfUsed(referralCode) {
         const ifUsed = fs.readJSONSync(join(__dirname, "database/usedInvites.json"));
-        const ifUsedInvite = ifUsed.find(usedInvite => usedInvite === referralCode);
+        var ifUsedInvite = false;
 
-        return ifUsedInvite ? true : false;
+        console.log("checking if used:");
+        console.log(referralCode)
+        for (let i = 0; i < ifUsed["0"].length; i++) {
+            console.log(ifUsed["0"][i].invite, referralCode)
+            if (ifUsed["0"][i].invite == referralCode) {
+                console.log("used");
+                ifUsedInvite = true;
+                break;
+            }
+        }
+
+        return ifUsedInvite;
     }
     
     verifyInviteCode(inviteCode = "") {

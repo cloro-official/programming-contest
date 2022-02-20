@@ -1,3 +1,4 @@
 node_modules/
 database/invites/
-database/user/
+database/users/
+databse/usedInvites.json

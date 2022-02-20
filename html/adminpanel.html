@@ -23,10 +23,8 @@
         $(document).ready(() => {
             $("#create").click(() => {
                 const name = ensure($('#name').val());
-                const email = ensure($('#email').val());
-                const phone = ensure($('#phone').val());
 
-                $.post("http://localhost:3000/create", { name: name, email: email, phone: phone }, (data) => {
+                $.post("http://localhost:3000/create", { id: name }, (data) => {
                      if (data.success) {
                         const json = data.class;
 
@@ -35,6 +33,10 @@
                         alert("There's an error trying to create your invite.")
                      } 
                 })
+            })
+
+            $("#register").click(() => {
+                window.location.href = "http://localhost:3000/register";
             })
         })
     </script>
@@ -49,24 +51,21 @@
             <div class="mb-4">
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="name" type="text" placeholder="Enter name">
+                    id="name" type="text" placeholder="Enter user ID">
             </div>
-            <div class="mb-4">
-                <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="email" type="text" placeholder="Enter email">
-            </div>
-            <div class="mb-4">
-                <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="phone" type="text" placeholder="Enter phone number">
-            </div>
-            <div class="flex flex-col items-center justify-between">
+            <div class="flex flex-row items-center justify-center">
                 <button
-                    class="bg-gradient-to-r from-green-400 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="bg-gradient-to-r from-green-400 mx-2 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button" id="create">
                     Create
                 </button>
+                <a href="/register">
+                    <button
+                        class="bg-gradient-to-r from-green-400 mx-2 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button" id="register">
+                        Register
+                    </button>
+                </a>
             </div>
         </form>
         <p class="text-center text-white text-xs">

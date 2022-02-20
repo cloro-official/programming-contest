@@ -16,21 +16,14 @@
             purgeLayersByDefault: true,
         };
 
+        
         $(document).ready(() => {
             const queryStrings = new Proxy(new URLSearchParams(window.location.search), {
                 get: (target, prop) => target.get(prop),
             });
 
-            const id = queryStrings.freeInvite;
+            const id = queryStrings.id;
             $("#id").text(id);
-            $("#referral").text("Referral: " + queryStrings.referral);
-
-            $.post("/mark-invite-used", {
-                user_id: queryStrings.user_id,
-                index: queryStrings.index,
-                referral: queryStrings.referral,
-                creator: queryStrings.creator,
-            });
         })
     </script>
     <style type="text/tailwindcss">
@@ -39,15 +32,14 @@
 </head>
 <body class="flex flex-row justify-center items-center">
     <div class="flex flex-col justify-center items-center">
-        <p class="text-2xl font-bold">You're invited to the event!</p>
-        <p class="text-xl font-bold" id="referral"></p>
-        <p class="text-lg font-semibold text-gray-500 mb-4">Here's your invite code, use it to enter the event.</p>
-        <p class="rounded-xl p-4 bg-gray-200 text-center text-2xl font-semibold px-6 text-gray-700" id="id"></p>
+        <p class="text-2xl font-bold">You're officially registered!</p>
+        <p class="text-lg font-semibold text-gray-500 mb-4">This is your User ID. You need this to enter the event.</p>
+        <p class="rounded-xl p-4 bg-gray-200 text-center text-lg font-extrabold px-6 text-gray-700" id="id"></p>
         
-        <a href="./" class="my-6">
+        <a href="/" class="my-6">
             <button
-                class="bg-gradient-to-r from-green-400 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="button">
+                class="bg-gradient-to-r from-green-400 mx-2 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button" id="register">
                 Go Back
             </button>
         </a>
