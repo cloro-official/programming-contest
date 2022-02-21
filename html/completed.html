@@ -24,7 +24,7 @@
 
             const id = queryStrings.freeInvite;
             $("#id-code").text(id);
-            $("#referral").text("Used Referral: " + queryStrings.referral);
+            $("#referral").text("Your referral code (invite others!): " + queryStrings.referral);
             $("#id-barcode").JsBarcode(id);
             $.post("/mark-invite-used", {
                 user_id: queryStrings.user_id,
