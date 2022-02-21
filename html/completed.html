@@ -21,10 +21,19 @@
             const queryStrings = new Proxy(new URLSearchParams(window.location.search), {
                 get: (target, prop) => target.get(prop),
             });
+            
+            const user_id = queryStrings.user_id;
+            $.post("http://localhost:3000/create", {id: user_id}, (data) => {
+                if (data.success) {
+                    const json = data.class;
 
+                    $("#id-referral").text("Created Referral (use this to invite more people): " + json.id);
+                    $("#bar-referral").JsBarcode(json.id)
+                }
+                else
+                    window.location.href = "http://localhost:3000/none";
+            })
             const id = queryStrings.freeInvite;
-            $("#id-code").text(id);
-            $("#referral").text("Your referral code (invite others!): " + queryStrings.referral);
             $("#id-barcode").JsBarcode(id);
             $.post("/mark-invite-used", {
                 user_id: queryStrings.user_id,
@@ -41,11 +50,11 @@
 <body class="flex flex-row justify-center items-center">
     <div class="flex flex-col justify-center items-center">
         <p class="text-2xl font-bold">You're invited to the event!</p>
-        <p class="text-xl font-bold" id="referral"></p>
-        <p class="text-lg font-semibold text-gray-500 mb-4">Here's your invite code, use it to enter the event.</p>
+        <p class="my-2 text-md font-semibold" id="id-referral"></p>
+        <svg class="self-center" id="bar-referral"></svg>
+        <p class="text-lg font-semibold text-gray-500 mt-6 mb-4">Here's your invite code, use it to enter the event.</p>
         <div class="flex flex-col justify-center items-center m-2 bg-gray-100 p-4 rounded-lg">
             <svg class="self-start" id="id-barcode"></svg>
-            <p class="my-2 text-md font-semibold" id="id-code"></p>
         </div>
         
         <a href="./" class="my-6">
