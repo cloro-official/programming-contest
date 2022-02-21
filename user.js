@@ -1,4 +1,5 @@
 const fs = require("fs-extra");
+const { compareTwoStrings } = require("string-similarity");
 const { join } = require("path");
 
 class User {
@@ -30,6 +31,26 @@ class User {
         user.id = id;
 
         return user;
+    }
+
+    static findForSimilar(name, phone, email) {
+        const users = fs.readdirSync(join(__dirname, "database/users"));
+        const userList = [];
+        users.forEach(user => {
+            const json = fs.readJSONSync(join(__dirname, "database/users", user));
+            const { name: userName, phone: userPhone, email: userEmail } = json;
+            const similarity = compareTwoStrings(name, userName);
+            const similarityPhone = compareTwoStrings(phone, userPhone);
+            const similarityEmail = compareTwoStrings(email, userEmail);
+            if (similarity > 0.8 || similarityPhone > 0.8 || similarityEmail > 0.8) {
+                userList.push(json);
+            }
+        });
+
+        if (userList.length > 0)
+            return User.constructFromJson(userList[0]);
+        else
+            return false;
     }
 
     parseToJson() {

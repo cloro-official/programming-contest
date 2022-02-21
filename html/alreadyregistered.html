@@ -9,7 +9,6 @@
         src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
-    <script src="../modules/jsbarcode.js"></script>
     <script src="https://cdn.tailwindcss.com/"></script>
     <script>
         tailwind.config.future = {
@@ -17,21 +16,14 @@
             purgeLayersByDefault: true,
         };
 
+        
         $(document).ready(() => {
             const queryStrings = new Proxy(new URLSearchParams(window.location.search), {
                 get: (target, prop) => target.get(prop),
             });
 
-            const id = queryStrings.freeInvite;
-            $("#id-code").text(id);
-            $("#referral").text("Used Referral: " + queryStrings.referral);
-            $("#id-barcode").JsBarcode(id);
-            $.post("/mark-invite-used", {
-                user_id: queryStrings.user_id,
-                index: queryStrings.index,
-                referral: queryStrings.referral,
-                creator: queryStrings.creator,
-            });
+            const id = queryStrings.id;
+            $("#id").text(id);
         })
     </script>
     <style type="text/tailwindcss">
@@ -40,18 +32,14 @@
 </head>
 <body class="flex flex-row justify-center items-center">
     <div class="flex flex-col justify-center items-center">
-        <p class="text-2xl font-bold">You're invited to the event!</p>
-        <p class="text-xl font-bold" id="referral"></p>
-        <p class="text-lg font-semibold text-gray-500 mb-4">Here's your invite code, use it to enter the event.</p>
-        <div class="flex flex-col justify-center items-center m-2 bg-gray-100 p-4 rounded-lg">
-            <svg class="self-start" id="id-barcode"></svg>
-            <p class="my-2 text-md font-semibold" id="id-code"></p>
-        </div>
+        <p class="text-2xl font-bold">We found an existing user with your credentials!</p>
+        <p class="text-lg font-semibold text-gray-500 mb-4">This is your User ID. You need this to enter the event.</p>
+        <p class="rounded-xl p-4 bg-gray-200 text-center text-lg font-extrabold px-6 text-gray-700" id="id"></p>
         
-        <a href="./" class="my-6">
+        <a href="/" class="my-6">
             <button
-                class="bg-gradient-to-r from-green-400 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="button">
+                class="bg-gradient-to-r from-green-400 mx-2 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button" id="register">
                 Go Back
             </button>
         </a>

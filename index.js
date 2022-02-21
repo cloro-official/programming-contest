@@ -12,6 +12,7 @@ const hexgen = require("hex-generator");
 const InvitationClass = require("./invitation.js");
 const UserClass = require("./user.js");
 const { use } = require('express/lib/application');
+const User = require('./user.js');
 
 const usedInvitePath = join(__dirname, "../../data/usedInvites.json");
 
@@ -45,6 +46,10 @@ router.get("/register", (req, res) => {
 
 router.get("/registered", (req, res) => {
     res.sendFile("./html/registered.html", { root: __dirname });
+})
+
+router.get("/alreadyregistered", (req, res) => {
+    res.sendFile("./html/alreadyregistered.html", { root: __dirname });
 })
 
 router.get("/", (req, res) => {
@@ -97,6 +102,12 @@ router.post("/register", (req, res) => {
     const { name, email, phone } = req.body;
 
     try {
+        const existingUser = UserClass.findForSimilar(name, phone, email)
+        if (existingUser) {
+            res.send({success: true, registered: true, class: existingUser})
+            return
+        }
+
         const user = new UserClass(name, phone, email);
         user.createFile();
 

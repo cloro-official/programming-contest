@@ -31,8 +31,11 @@
                 $.post("/register", { name: name, email: email, phone: phone }, (data) => {
                     if (data.success) {
                         const json = data.class;
-
-                        window.location.href = "http://localhost:3000/registered?id=" + json.id;
+                        
+                        if (data.registered)
+                            window.location.href = "http://localhost:3000/alreadyregistered?id=" + json.id;
+                        else
+                            window.location.href = "http://localhost:3000/registered?id=" + json.id;
                     } else
                         window.location.href = "http://localhost:3000/none";
                 })

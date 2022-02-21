@@ -7,8 +7,8 @@ const appendIdtoString = (id = "", string = "", start = 1) => {
 }
 
 class Invitation {
-    constructor(cid, name, phone, email) {
-        var id = hexgen(16).toUpperCase();
+    constructor(cid, name, phone, email, nid) {
+        var id = nid || hexgen(16).toUpperCase();
         var startIndex = Math.floor((Math.random() * 3) + 1); // index may start from 1 to 2
         var refCode = hexgen(16).toUpperCase();
         
