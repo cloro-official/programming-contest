@@ -35,8 +35,61 @@
                 })
             })
 
+            $.post("http://localhost:3000/get-all", {}, (data) => {
+                if (data.success) {
+                    const json = data.invites;
+                    for (let i = 0; i < json.length; i++) {
+                        const invite = json[i];
+
+                        $("#container").append(`
+                            <div id="invite-element" class="flex flex-row items-center px-4 py-2 justify-between bg-gray-200 border-b-2 border-gray-400 w-full h-12">
+                                <p id="invite-id" class="font-bold text-left text-gray-700 text-xl">${invite.id}</p>
+                                <a href="/view?id=${invite.id}&creator=${invite.creator}&name=${invite.name}&phone=${invite.phone}&startIndex=${invite.startIndex}&generatedInvite1=${invite.generatedInvites[0]}&generatedInvite2=${invite.generatedInvites[1]}">
+                                    <button 
+                                        class="bg-gradient-to-r from-green-400 mx-2 to-blue-500 hover:bg-blue-700 text-white font-bold py-px px-4 rounded focus:outline-none focus:shadow-outline"
+                                        type="button" id="view">
+                                        View
+                                    </button>
+                                </a>
+                            </div>
+                        `)
+                    }
+                } else {
+                    alert("There's an error trying to get all invites.")
+                }
+            })
+
             $("#register").click(() => {
                 window.location.href = "http://localhost:3000/register";
+            })
+
+            $("#search").on("input", (e) => {
+                const search = e.target.value;
+                $("#container").empty();
+
+                $.post("http://localhost:3000/search", { search: search }, (data) => {
+                    if (data.success) {
+                        const json = data.invites;
+                        for (let i = 0; i < json.length; i++) {
+                            const invite = json[i];
+
+                            $("#container").append(`
+                                <div id="invite-element" class="flex flex-row items-center px-4 py-2 justify-between bg-gray-200 border-b-2 border-gray-400 w-full h-12">
+                                    <p id="invite-id" class="font-bold text-left text-gray-700 text-xl">${invite.id}</p>
+                                    <a href="/view?id=${invite.id}&creator=${invite.creator}&name=${invite.name}&phone=${invite.phone}&startIndex=${invite.startIndex}&generatedInvite1=${invite.generatedInvites[0]}&generatedInvite2=${invite.generatedInvites[1]}">
+                                        <button 
+                                            class="bg-gradient-to-r from-green-400 mx-2 to-blue-500 hover:bg-blue-700 text-white font-bold py-px px-4 rounded focus:outline-none focus:shadow-outline"
+                                            type="button" id="view">
+                                            View
+                                        </button>
+                                    </a>
+                                </div>
+                            `)
+                        }
+                    } else {
+                        alert("There's an error trying to get all invites.")
+                    }
+                })
             })
         })
     </script>
@@ -45,7 +98,7 @@
     </style>
 </head>
 <body class="bg-gradient-to-r from-cyan-400 to-blue-500 flex flex-row justify-center items-center">
-    <div class="w-full max-w-xs">
+    <div class="flex flex-col w-full max-w-xs">
         <form class="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
             <p class="mb-4 self-center w-full text-center font-bold">Create Invite Code</p>
             <div class="mb-4">
@@ -68,7 +121,15 @@
                 </a>
             </div>
         </form>
-        <p class="text-center text-white text-xs">
+
+        <div class="bg-white shadow-md rounded-xl flex flex-col justify-center px-8 pt-6 pb-8 mt-4">
+            <p class="mb-4 self-center w-full text-center font-bold">Search Invites</p>
+            <input type="text" id="search" placeholder="Enter referral code..." class="px-2 border-2 border-gray-300 bg-gray-200 rounded-md">
+            <div id="container" class="flex flex-col w-full h-96 mt-4 bg-gray-300 overflow-y-scroll rounded-lg">
+                
+            </div>
+        </div>
+        <p class="text-center text-white text-xs mt-6">
             &copy;2022 Team Kani
         </p>
     </div>

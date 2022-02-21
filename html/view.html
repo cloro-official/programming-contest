@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification</title>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com/"></script>
+    <script>
+        tailwind.config.future = {
+            removeDeprecatedGapUtilities: true,
+            purgeLayersByDefault: true,
+        };
+
+        $(document).ready(() => {
+            const queryStrings = new Proxy(new URLSearchParams(window.location.search), {
+                get: (target, prop) => target.get(prop),
+            });
+
+            const id = queryStrings.id;
+            const creator = queryStrings.creator;
+            const name = queryStrings.name;
+            const phone = queryStrings.phone;
+            const startIndex = queryStrings.startIndex;
+            const generatedInvite1 = queryStrings.generatedInvite1;
+            const generatedInvite2 = queryStrings.generatedInvite2;
+
+            $("#title").text("Viewing: " + id);
+            $("#ref-code").text(id);
+            $("#creator").text(creator);
+            $("#name").text(name);
+            $("#phone").text(phone);
+            $("#startindex").text(startIndex);
+            $("#invite-one").text(generatedInvite1);
+            $("#invite-two").text(generatedInvite2);
+        })
+    </script>
+    <style type="text/tailwindcss">
+
+    </style>
+</head>
+<body class="bg-gradient-to-r from-cyan-400 to-blue-500 flex flex-row justify-center items-center">
+    <div class="flex flex-col max-w-xs">
+        <form class="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
+            <p class="mb-4 self-center w-full text-center font-bold" id="title">Create Invite Code</p>
+            <div class="flex flex-row justify-between my-2">
+                <p class="text-sm font-bold">ID</p>
+                <p class="px-4 py-px text-sm ml-6 text-gray-700 font-semibold rounded-lg bg-gray-200" id="ref-code"></p>
+            </div>
+            <div class="flex flex-row justify-between my-2">
+                <p class="text-sm font-bold">Creator</p>
+                <p class="px-4 py-px text-sm ml-6 text-gray-700 font-semibold rounded-lg bg-gray-200" id="creator"></p>
+            </div>
+            <div class="flex flex-row justify-between my-2">
+                <p class="text-sm font-bold">Name</p>
+                <p class="px-4 py-px text-sm ml-6 text-gray-700 font-semibold rounded-lg bg-gray-200" id="name"></p>
+            </div>
+            <div class="flex flex-row justify-between my-2">
+                <p class="text-sm font-bold">Phone</p>
+                <p class="px-4 py-px text-sm ml-6 text-gray-700 font-semibold rounded-lg bg-gray-200" id="phone"></p>
+            </div>
+            <div class="flex flex-row justify-between my-2">
+                <p class="text-sm font-bold">StartIndex</p>
+                <p class="px-4 py-px text-sm ml-6 text-gray-700 font-semibold rounded-lg bg-gray-200" id="startindex"></p>
+            </div>
+            <div class="flex flex-row justify-between my-2">
+                <p class="text-sm font-bold">Invite 1</p>
+                <p class="px-4 py-px text-sm ml-6 text-gray-700 font-semibold rounded-lg bg-gray-200" id="invite-one"></p>
+            </div>
+            <div class="flex flex-row justify-between my-2">
+                <p class="text-sm font-bold">Invite 2</p>
+                <p class="px-4 py-px text-sm ml-6 text-gray-700 font-semibold rounded-lg bg-gray-200" id="invite-two"></p>
+            </div>
+            <div class="flex flex-row items-center justify-center mt-6">
+                <a href="/adminpanel">
+                    <button
+                        class="bg-gradient-to-r from-green-400 mx-2 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button" id="register">
+                        Go Back
+                    </button>
+                </a>
+            </div>
+        </form>
+        <p class="text-center text-white text-xs mt-6">
+            &copy;2022 Team Kani
+        </p>
+    </div>
+</body>
+</html>

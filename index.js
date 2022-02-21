@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require("fs-extra");
 const { join } = require("path");
+const { compareTwoStrings } = require("string-similarity");
 
 const router = express.Router();
 
@@ -50,6 +51,10 @@ router.get("/registered", (req, res) => {
 
 router.get("/alreadyregistered", (req, res) => {
     res.sendFile("./html/alreadyregistered.html", { root: __dirname });
+})
+
+router.get("/view", (req, res) => {
+    res.sendFile("./html/view.html", { root: __dirname });
 })
 
 router.get("/", (req, res) => {
@@ -136,7 +141,49 @@ router.post("/create", (req, res) => {
         console.log(error);
         res.send({success: false, error: error});
     }
-});
+}); 
+
+router.post("/search", (req, res) => {
+    const { search } = req.body;
+
+    try {
+        // get invite from name
+        const similar = [];
+        const invites = fs.readdirSync(join(__dirname, "database/invites"));
+
+        for (let i = 0; i < invites.length; i++) {
+            const invite = invites[i];
+            const inviteData = fs.readJSONSync(join(__dirname, "database/invites", invite));
+            const invitationClass = InvitationClass.constructFromJson(inviteData);
+
+            if (invitationClass.id.toLowerCase().includes(search.toLowerCase())) {
+                console.log("includes!")
+                similar.push(invitationClass.parseToJson());
+            }
+        }
+
+        res.send({success: true, invites: similar});
+    } catch (error) {
+        res.send({success: false, error: error});
+    }
+})
+
+router.post("/get-all", (req, res) => {
+    // get all invites
+    try { 
+        const invites = fs.readdirSync(join(__dirname, "database/invites"));
+        const inviteList = [];
+        for (let i = 0; i < invites.length; i++) {
+            const invite = invites[i];
+            const inviteJSON = fs.readJSONSync(join(__dirname, "database/invites", invite));
+            inviteList.push(inviteJSON);
+        }
+    
+        res.send({success: true, invites: inviteList});
+    } catch(error) {
+        res.send({success: false, error: error})
+    }
+})
 
 router.get("/none", (req, res) => {
     res.sendFile("./html/none.html", { root: __dirname });
