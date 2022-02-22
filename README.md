@@ -25,5 +25,5 @@ A separate system should be created to present this linking system.
 This project is created using `Node.js 16.14.0`, with the packages [hex-generator](https://www.npmjs.com/package/hex-generator) and [jsbarcode](https://www.npmjs.com/package/jsbarcode). It creates an `Invitation` class that generates a reference code and two invites, where the reference code is appended to a randomized index of each invite.
 
 ## Initialization
-1. Run `npm init` to install all necessary packages.
+1. Run `npm update` to install all necessary packages.
 2. Do `node index.js` to run the UI.
