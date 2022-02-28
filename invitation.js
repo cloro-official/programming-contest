@@ -12,6 +12,7 @@ class Invitation {
         var startIndex = Math.floor((Math.random() * 3) + 1); // index may start from 1 to 2
         var refCode = hexgen(16).toUpperCase();
         
+        console.log(nid);
         console.log(startIndex);
         //
 
@@ -45,6 +46,7 @@ class Invitation {
     getInvites() {
         // create Invites
         var invites = [];
+        console.log(this);
         this.inviteeReferenceCode.forEach(refCode => {
             invites.push(appendIdtoString(this.id, refCode, this.startIndex));
         })
@@ -97,7 +99,7 @@ class Invitation {
             console.log(invite);
             if (this.checkIfUsed(invite) == false) {
                 console.log("used!")
-                return {invite: invite, index: i};
+                return {invite: invite, index: i, inviteeReference: this.inviteeReferenceCode[i]};
             }
         }
 

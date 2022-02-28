@@ -23,7 +23,9 @@
             });
             
             const user_id = queryStrings.user_id;
-            $.post("http://localhost:3000/create", {id: user_id}, (data) => {
+            const id = queryStrings.freeInvite;
+
+            $.post("http://localhost:3000/create", {id: user_id, newReferral: queryStrings.code}, (data) => {
                 if (data.success) {
                     const json = data.class;
 
@@ -33,7 +35,6 @@
                 else
                     window.location.href = "http://localhost:3000/none";
             })
-            const id = queryStrings.freeInvite;
             $("#id-barcode").JsBarcode(id);
             $.post("/mark-invite-used", {
                 user_id: queryStrings.user_id,

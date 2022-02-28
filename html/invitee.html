@@ -42,7 +42,7 @@
                         }
         
                         $("#submit").click(() => {
-                            window.location.href = "http://localhost:3000/completed?referral=" + data.referral + "&freeInvite=" + freeInvite + "&index=" + data.index + "&user_id=" + data.user_id + "&creator=" + data.creator;
+                            window.location.href = "http://localhost:3000/completed?referral=" + data.referral + "&freeInvite=" + freeInvite + "&index=" + data.index + "&user_id=" + data.user_id + "&creator=" + data.creator + "&code=" + data.inviteeReference;
                         })
                     }
                 });
@@ -66,7 +66,7 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="name" type="text" placeholder="Enter user ID">
             </div>
-            <div class="flex flex-col items-center justify-between">
+            <div class="flex flex-row items-center justify-center">
                 <button
                     class="bg-gradient-to-r from-green-400 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button" id="submit">
@@ -75,7 +75,7 @@
                 <button
                     class="bg-gradient-to-r from-green-400 mx-2 to-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button" id="back" onclick="history.back()">
-                    Go Back
+                    Back
                 </button>
             </div>
         </form>

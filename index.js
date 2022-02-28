@@ -95,9 +95,9 @@ router.post("/get-class", (req, res) => {
         const data = fs.readFileSync(filePath);
         const invitation = JSON.parse(data);
         const invitationClass = InvitationClass.constructFromJson(invitation);
-        const { invite, index } = invitationClass.getUnusedInvite();
+        const { invite, index, inviteeReference } = invitationClass.getUnusedInvite();
         
-        res.send({success: true, freeInvite: invite, creator: invitationClass.creator, index: index, user_id: user_id, referral: invitationClass.id});
+        res.send({success: true, freeInvite: invite, inviteeReference: inviteeReference, creator: invitationClass.creator, index: index, user_id: user_id, referral: invitationClass.id});
     }
 
     res.send({success: false})
@@ -124,7 +124,7 @@ router.post("/register", (req, res) => {
 })
 
 router.post("/create", (req, res) => {
-    const { id } = req.body;
+    const { id, newReferral } = req.body;
 
     try {
         const exist = fs.existsSync(join(__dirname, "database/users", id + ".json"));
@@ -133,7 +133,7 @@ router.post("/create", (req, res) => {
         const json = fs.readJSONSync(join(__dirname, "database/users", id + ".json"));
         const user = UserClass.constructFromJson(json);
 
-        const invitation = new InvitationClass(user.id, user.name, user.phone, user.email);
+        const invitation = new InvitationClass(user.id, user.name, user.phone, user.email, newReferral);
         invitation.createFile();
         
         res.send({success: true, class: invitation.parseToJson()});
@@ -202,9 +202,12 @@ router.post("/index", (req, res) => {
 
     if (referral) {
         const exists = fs.existsSync(join(__dirname, "database/invites", referral + ".json"));
-        res.send({success: exists});
+        if (exists) {
+            const data = fs.readFileSync(join(__dirname, "database/invites", referral + ".json"));
+            const invitation = JSON.parse(data);
 
-        res.end();
+            res.send({success: exists, index: invitation.startIndex, user_id: invitation.creator});
+        }
     }
 })
 
